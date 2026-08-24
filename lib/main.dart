@@ -5,6 +5,7 @@ import 'package:my_stacked_notes/app/app.dialogs.dart';
 import 'package:my_stacked_notes/app/app.locator.dart';
 import 'package:my_stacked_notes/app/app.router.dart';
 import 'package:my_stacked_notes/firebase_options.dart';
+import 'package:my_stacked_notes/ui/views/counter_testing/counter_testing_view.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 Future<void> main() async {
@@ -24,7 +25,8 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: Routes.loginView,
+      home: CounterTestingView(),
+      initialRoute: Routes.counterTestingView,
       onGenerateRoute: StackedRouter().onGenerateRoute,
       navigatorKey: StackedService.navigatorKey,
       navigatorObservers: [StackedService.routeObserver],

@@ -92,13 +92,19 @@ class SingupView extends StackedView<SingupViewModel> with $SingupView {
                         name: nameController.text,
                         email: emailController.text,
                         password: passwordController.text);
+
+                    // debugPrint("[Singup]ui SCreen function GotoLogin Called");
+
+                    // viewModel.goToLogin();
                   },
                   child: const Text('Sign Up'),
                 ),
               ),
               const SizedBox(height: 16),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  viewModel.goToLogin();
+                },
                 child: const Text(
                   'Already have an account? Login',
                 ),

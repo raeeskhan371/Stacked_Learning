@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:my_stacked_notes/ui/views/login/login_view.form.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked/stacked_annotations.dart';
 
 import 'login_viewmodel.dart';
 
-class LoginView extends StackedView<LoginViewModel> {
+@FormView(fields: [
+  FormTextField(name: "email"),
+  FormTextField(name: "password"),
+])
+class LoginView extends StackedView<LoginViewModel> with $LoginView {
   const LoginView({Key? key}) : super(key: key);
 
   @override
@@ -23,23 +29,23 @@ class LoginView extends StackedView<LoginViewModel> {
         body: Column(
           children: [
             TextField(
-              onChanged: (value) {
-                viewModel.email = value;
-              },
+              controller: emailController,
               decoration: const InputDecoration(
                 labelText: 'email',
               ),
             ),
             TextField(
-              onChanged: (value) {
-                viewModel.password = value;
-              },
+              controller: passwordController,
               decoration: const InputDecoration(
                 labelText: 'Password',
               ),
             ),
             ElevatedButton(
-              onPressed: viewModel.login,
+              onPressed: () {
+                viewModel.login(
+                    email: emailController.text,
+                    password: passwordController.text);
+              },
               child: const Text('Login'),
             ),
             TextButton(

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:stacked/stacked.dart';
-import 'package:my_stacked_notes/ui/common/app_colors.dart';
 import 'package:my_stacked_notes/ui/common/ui_helpers.dart';
+import 'package:stacked/stacked.dart';
 
 import 'home_viewmodel.dart';
 
@@ -10,111 +9,90 @@ class HomeView extends StackedView<HomeViewModel> {
 
   @override
   Widget builder(BuildContext context, HomeViewModel viewModel, Widget? child) {
-    debugPrint("[Screen]Rebuild Screen");
+    debugPrint("i HomeScreen full Rebuild");
     return Scaffold(
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25.0),
           child: Center(
             child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 verticalSpaceLarge,
-                Column(
-                  children: [
-                    const Text(
-                      'Hello, STACKED!',
-                      style: TextStyle(
-                        fontSize: 35,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                    verticalSpace(3),
-                    MaterialButton(
-                      color: Colors.black,
-                      onPressed: viewModel.incrementCounter,
-                      child: Text(
-                        viewModel.counterLabel,
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    MaterialButton(
-                      color: Colors.green,
-                      onPressed: viewModel.addNote,
-                      child: Text(
-                        "add Note",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: viewModel.logout,
-                      child: const Text('Logout'),
-                    )
-                  ],
-                ),
-                Expanded(
-                  child: ListView.builder(
-                      itemCount: viewModel.notes.length,
-                      itemBuilder: (context, index) {
-                        final note = viewModel.notes[index];
+                StreamBuilder(
+                  stream: viewModel.fetchingNotes(),
+                  builder: (context, snapshot) {
+                    debugPrint("i StreamBuilder Rebuild");
+                    final notes = snapshot.data!;
+                    return Expanded(
+                      child: ListView.builder(
+                        itemCount: notes.length,
+                        itemBuilder: (context, index) {
+                          final note = notes[index];
 
-                        return ListTile(
-                            title: Text(
-                              note.title,
-                              style: TextStyle(color: Colors.amber),
+                          return Container(
+                            margin: const EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                            subtitle: Text(note.description),
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    viewModel.updateNote(index);
-                                  },
-                                  child: Icon(
-                                    Icons.edit,
-                                    color: Colors.blue,
+                                Text(
+                                  note.title,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                horizontalSpaceMedium,
-                                GestureDetector(
-                                  onTap: () {
-                                    viewModel.deleteNote(index);
-                                  },
-                                  child: Icon(
-                                    Icons.delete,
-                                    color: Colors.red,
+                                const SizedBox(height: 8),
+                                Text(
+                                  note.description,
+                                  style: const TextStyle(
+                                    fontSize: 14,
                                   ),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {},
+                                      icon: const Icon(Icons.edit),
+                                    ),
+                                    IconButton(
+                                      onPressed: () async {
+                                        await viewModel.deleteNote(note.id!);
+                                      },
+                                      icon: const Icon(
+                                        Icons.delete,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
-                            ));
-                      }),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    MaterialButton(
-                      color: kcDarkGreyColor,
-                      onPressed: viewModel.showDialog,
-                      child: const Text(
-                        'Show Dialog',
-                        style: TextStyle(color: Colors.white),
+                            ),
+                          );
+                        },
                       ),
-                    ),
-                    MaterialButton(
-                      color: kcDarkGreyColor,
-                      onPressed: viewModel.showBottomSheet,
-                      child: const Text(
-                        'Show Bottom Sheet',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ],
+                    );
+                  },
                 ),
               ],
             ),
           ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          viewModel.goToAddView();
+        },
+        backgroundColor: Colors.blue,
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
         ),
       ),
     );

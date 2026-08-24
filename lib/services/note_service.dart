@@ -1,18 +1,56 @@
+import 'package:flutter/foundation.dart';
+import 'package:my_stacked_notes/app/app.locator.dart';
 import 'package:my_stacked_notes/models/note_model.dart';
+import 'package:my_stacked_notes/services/firebase_service.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 class NoteService {
-  final List<NoteModel> _notes = [];
-  List<NoteModel> get notes => _notes;
+  final _firebaseFirebaseServices = locator<FirebaseService>();
+  final _navigationServices = locator<NavigationService>();
 
-  void addNote(NoteModel note) {
-    _notes.add(note);
+  Future<void> addNote(NoteModel note) async {
+    debugPrint("[FirebaseServices] Firestore: AddNote processing Start");
+    final uid = _firebaseFirebaseServices.Authentication.currentUser?.uid;
+
+    await _firebaseFirebaseServices.FirebaseStorage.collection("Users")
+        .doc(uid)
+        .collection("Notes")
+        .doc()
+        .set(note.toMap());
+    debugPrint("[FirebaseServices] Firestore: AddNote processing End");
   }
 
-  void updateNote(int index, NoteModel updateNote) {
-    _notes[index] = updateNote;
+  Stream<List<NoteModel>> fetchingNotes() {
+    debugPrint("i  Firestore Stream CREATED");
+    debugPrint("[FirebaseServices] FireStore: fetchingNotes processing Start");
+    final uid = _firebaseFirebaseServices.Authentication.currentUser?.uid;
+
+    final noteData =
+        _firebaseFirebaseServices.FirebaseStorage.collection("Users")
+            .doc(uid)
+            .collection("Notes")
+            .snapshots();
+
+    return noteData.map((snapshot) {
+      final notes = snapshot.docs.map((doc) {
+        return NoteModel.fromMap(doc.data(), doc.id);
+      }).toList();
+
+      debugPrint("[FirebaseServices] FireStore: fetchingNotes processing End");
+
+      return notes;
+    });
   }
 
-  void deleteNote(int index) {
-    _notes.removeAt(index);
+  Future<void> deleteNote(String id) async {
+    debugPrint("[FirebaseServices] FireStore: deleteNote processing Start");
+
+    final uid = _firebaseFirebaseServices.Authentication.currentUser?.uid;
+    await _firebaseFirebaseServices.FirebaseStorage.collection("Users")
+        .doc(uid)
+        .collection("Notes")
+        .doc(id)
+        .delete();
+    debugPrint("[FirebaseServices] FireStore: deleteNote processing End");
   }
 }

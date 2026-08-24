@@ -10,6 +10,8 @@ import 'package:my_stacked_notes/ui/views/singup/singup_view.dart';
 
 import 'package:my_stacked_notes/services/auth_service.dart';
 import 'package:my_stacked_notes/services/firebase_service.dart';
+import 'package:my_stacked_notes/ui/views/addnote/addnote_view.dart';
+import 'package:my_stacked_notes/ui/views/counter_testing/counter_testing_view.dart';
 // @stacked-import
 
 @StackedApp(
@@ -18,6 +20,8 @@ import 'package:my_stacked_notes/services/firebase_service.dart';
     MaterialRoute(page: StartupView),
     MaterialRoute(page: LoginView),
     MaterialRoute(page: SingupView),
+    MaterialRoute(page: AddnoteView),
+    MaterialRoute(page: CounterTestingView),
 // @stacked-route
   ],
   dependencies: [
