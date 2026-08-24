@@ -19,24 +19,7 @@ class CounterTestingView extends StackedView<CounterTestingViewModel> {
       backgroundColor: Theme.of(context).colorScheme.background,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ValueListenableBuilder<int>(
-            valueListenable: viewModel.counter,
-            builder: (context, value, child) {
-              debugPrint("t CounterWidget Rebuild");
-              return Column(
-                children: [
-                  Text("${value.toString()}"),
-                  ElevatedButton(
-                      onPressed: () {
-                        viewModel.increment();
-                      },
-                      child: Text("Incmrement"))
-                ],
-              );
-            },
-          ),
-        ],
+        children: [],
       ),
     );
   }
